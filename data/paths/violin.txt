@@ -1,0 +1,46 @@
+55 ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.G3.stereo.aif
+56 ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.Ab3.stereo.aif
+57 ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.A3.stereo.aif
+58 ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.Bb3.stereo.aif
+59 ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.B3.stereo.aif
+60 ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.C4.stereo.aif
+61 ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.Db4.stereo.aif
+62 ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.D4.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.D4.stereo.aif
+63 ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.Eb4.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.Eb4.stereo.aif
+64 ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.E4.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.E4.stereo.aif
+65 ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.F4.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.F4.stereo.aif
+66 ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.Gb4.stereo.aif
+67 ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.G4.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.G4.stereo.aif
+68 ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.Ab4.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.Ab4.stereo.aif
+69 ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.A4.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.A4.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.A4.stereo.aif
+70 ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.Bb4.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.Bb4.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.Bb4.stereo.aif
+71 ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.B4.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.B4.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.B4.stereo.aif
+72 ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.C5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.C5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.C5.stereo.aif
+73 ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.Db5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.Db5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.Db5.stereo.aif
+74 ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.D5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.D5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulG.stereo/Violin.arco.ff.sulG.D5.stereo.aif
+75 ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.Eb5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.Eb5.stereo.aif
+76 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.E5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.E5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.E5.stereo.aif
+77 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.F5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.F5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.F5.stereo.aif
+78 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.Gb5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.Gb5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.Gb5.stereo.aif
+79 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.G5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.G5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.G5.stereo.aif
+80 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.Ab5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.Ab5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.Ab5.stereo.aif
+81 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.A5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.A5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.A5.stereo.aif
+82 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.Bb5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.Bb5.stereo.aif
+83 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.B5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.B5.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.B5.stereo.aif
+84 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.C6.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.C6.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulD.stereo/Violin.arco.ff.sulD.C6.stereo.aif
+85 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.Db6.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.Db6.stereo.aif
+86 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.D6.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.D6.stereo.aif
+87 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.Eb6.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.Eb6.stereo.aif
+88 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.E6.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.E6.stereo.aif
+89 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.F6.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.F6.stereo.aif
+90 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.Gb6.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.Gb6.stereo.aif
+91 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.G6.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.G6.stereo.aif
+92 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.Ab6.stereo.aif ../Datasets/iowa/violin/Violin.arco.ff.sulA.stereo/Violin.arco.ff.sulA.Ab6.stereo.aif
+93 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.A6.stereo.aif
+94 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.Bb6.stereo.aif
+95 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.B6.stereo.aif
+96 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.C7.stereo.aif
+97 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.Db7.stereo.aif
+98 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.D7.stereo.aif
+99 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.Eb7.stereo.aif
+100 ../Datasets/iowa/violin/Violin.arco.ff.sulE.stereo/Violin.arco.ff.sulE.E7.stereo.aif
