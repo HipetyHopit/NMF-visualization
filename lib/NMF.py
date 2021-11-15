@@ -59,7 +59,7 @@ def KLD(X, Y):
     # Avoid zero division
     if (abs(Y).min() == 0):
         Y += np.full(Y.shape, 1e-32)
-        print ("Warning! Almost divide by 0")
+        print ("Warning! Almost divided by 0!")
     
     kld = np.multiply(X, np.log10(X/Y)) - X + Y
     
