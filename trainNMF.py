@@ -8,6 +8,9 @@ import numpy as np
 
 from lib.CQT import CQTspectrogram
 from lib.NMF import NMF
+from lib.normalize import maxNormalize
+from lib.normalize import RMSnormalize
+from lib.normalize import sumNormalize
 from lib.spectrogram import magnitudeSpectrogram
 from lib.utils import createDir
 
@@ -15,8 +18,9 @@ NMF_DICTIONARY_PATH = "data/dictionaries/"
 INSTRUMENT_INFO_PATH = "data/paths/"
 
 def trainDictionary(instrument, instrumentRange = None, infoFile = None,
-                    cqt = False, dictionaryPath = None, Fs = 44100,
-                    fftSize = 2048, numOctaves = 8, octaveBins = 60, **kwargs):
+                    cqt = False, dictionaryPath = None, normalization = None,
+                    Fs = 44100, fftSize = 2048, numOctaves = 8, octaveBins = 60,
+                    **kwargs):
     """
     Train an instrument model with NMF.
 
@@ -75,6 +79,9 @@ def trainDictionary(instrument, instrumentRange = None, infoFile = None,
         else:
             S = magnitudeSpectrogram(x, Fs, **kwargs)
 
+        if (not normalization is None):
+            S = normalization(S, axis = 1)
+
         h, w = NMF(S, k = 1, **kwargs)
         W[i] = w.flatten()
 
@@ -88,4 +95,4 @@ def trainDictionary(instrument, instrumentRange = None, infoFile = None,
 
 if (__name__ == "__main__"):
 
-    trainDictionary("bassoon")
+    trainDictionary("bassoon", normalization = maxNormalize)

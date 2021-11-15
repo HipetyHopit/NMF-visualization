@@ -65,14 +65,16 @@ def KLD(X, Y):
     
     return np.sum(kld)
 
-def NMF(V, H = None, W = None, k = 1, threshold = 0.0001, iterations = 200, 
-        verbose = False, **kwargs):
+def NMF(V, H = None, W = None, k = 1, threshold = 0.0001, iterations = 200,
+        updateW = True, verbose = False, seed = 314, **kwargs):
+
+    rng = np.random.default_rng(seed)
 
     if (W is None):
-        W = 1 - np.random.rand(V.shape[0], k)
+        W = 1 - rng.random((V.shape[0], k))
 
     if (H is None):
-        H = 1 - np.random.rand(k, V.shape[1])
+        H = 1 - rng.random((k, V.shape[1]))
 
     for i in range(iterations):
         H_ = H.copy()
@@ -84,10 +86,11 @@ def NMF(V, H = None, W = None, k = 1, threshold = 0.0001, iterations = 200,
         H = H*WV/WWH
 
         # Update W.
-        VH = np.matmul(V, H_.T)
-        WH = np.matmul(W, H_)
-        WHH = np.matmul(WH, H_.T)
-        W = W*VH/WHH
+        if (updateW):
+            VH = np.matmul(V, H_.T)
+            WH = np.matmul(W, H_)
+            WHH = np.matmul(WH, H_.T)
+            W = W*VH/WHH
 
         # Get cost.
         Vapprox = np.matmul(W, H)

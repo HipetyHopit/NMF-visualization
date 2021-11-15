@@ -12,16 +12,17 @@ def maxNormalize(X, axis = None):
 
     return np.apply_along_axis(maxNormalize, axis, X)
 
-    #norm = np.max(X, axis = axis - 1)
-    #print (norm.shape, norm)
-    #Y = np.divide(X, norm)
+def sumNormalize(X, axis = None):
 
-    #return Y
+    if (axis is None):
+        return X/np.sum(X)
+
+    return np.apply_along_axis(sumNormalize, axis, X)
 
 def RMSnormalize(X, axis = None):
 
     if (axis is None):
-        N = np.multiply(*X.shape)
+        N = X.size
         rms = np.sqrt(np.sum(abs(np.square(X)))/N)
 
         return X/np.max(X)
