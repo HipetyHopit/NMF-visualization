@@ -8,6 +8,10 @@ import librosa
 import numpy as np
 import os.path
 
+from lib.NMF import NMF
+from lib.normalize import maxNormalize
+from lib.normalize import RMSnormalize
+from lib.normalize import sumNormalize
 from lib.spectrogram import magnitudeSpectrogram
 from lib.utils import createDir
 
@@ -29,6 +33,7 @@ if (__name__ == "__main__"):
     parser.add_argument("-d",
                         help = "The destination file. (default = None)",
                         type = str, default = None, dest = "saveAs")
+    parser.add_argument("--updateW", default = False, action = "store_true")
     args = parser.parse_args()
 
     # Load spectrogram.
@@ -77,28 +82,38 @@ if (__name__ == "__main__"):
             pass
 
         try:
-            W = np.load(SPECTROGRAM_PATH + path)
+            W = np.load(DICTIONARY_PATH + path)
             break
         except:
             pass
 
         try:
-            W = np.load(SPECTROGRAM_PATH + path + ".npy")
+            W = np.load(DICTIONARY_PATH + path + ".npy")
             break
         except:
             pass
 
-        print ("Could not load spectrogram file!")
+        print ("Could not load dictionary file!")
         raise SystemExit()
 
-    H, W = NMF(V, H = None, W = W, threshold = 0.0001, iterations = 200,
-        verbose = False, seed = 314, **kwargs):
+    if (args.norm.lower() == "max"):
+        V = maxNormalize(S, axis = 1)
+    elif (args.norm.lower() == "rms"):
+        V = RMSnormalize(S, axis = 1)
+    elif (args.norm.lower() == "sum"):
+        V = sumNormalize(S, axis = 1)
+    else:
+        V = S
 
-    S = magnitudeSpectrogram(x, Fs = args.Fs, hopLen = args.hopLen)
+    numBins, numNotes = W.shape
 
+    H, W = NMF(V, H = None, W = W, k = numNotes, threshold = 0.001,
+               iterations = 20, updateW = args.updateW, verbose = False)
+
+    path = args.excerpt
     if (args.saveAs is None):
-        path = SPECTROGRAM_PATH + path + ".npy"
+        path = NMF_PATH + path + ".npy"
     else:
         path = args.saveAs
     createDir(path)
-    np.save(path, S)
+    np.save(path, H)
