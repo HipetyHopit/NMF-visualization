@@ -1,6 +1,6 @@
 """@package NMF-visualization
 
-Visualize NMF transcriptions.
+Visualize mixed NMF transcriptions.
 """
 
 import argparse
