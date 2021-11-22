@@ -21,5 +21,6 @@ _spectrograms_ is a list of spectrogram and transcription paths to be compared.
 Optionally an array of labels can be added using the -l flag.
 
 ## Requirements
+- Librosa 0.8.1
 - NumPy 1.20.3
 - Matplotlib 3.4.3
