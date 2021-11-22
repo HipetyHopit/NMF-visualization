@@ -3,6 +3,7 @@
 Visualize NMF transcriptions.
 """
 
+import argparse
 import librosa
 import numpy as np
 
@@ -30,8 +31,13 @@ def trainDictionary(instrument, instrumentRange = None, infoFile = None,
     infoFile -- the path to a textfile containg instrument note paths.
         (default = None)
     cqt -- whether to use CQT instead of STFT. (default = False)
-    dictionaryName -- path to save . (default = None)
+    dictionaryPath -- path to save . (default = None)
+    normalization -- the spectrogram normalization function.
+        (default = None)
     Fs -- the sample rate. (default = SAMPLE_RATE)
+    fftSize -- the number of FFT bins. (default =2048)
+    numOctaves -- the number of CQT octaves. (default = 8)
+    octaveBins -- the number of bins per CQT octavee. (default = 60)
     """
 
     kwargs.setdefault("fftSize", fftSize)
@@ -95,4 +101,31 @@ def trainDictionary(instrument, instrumentRange = None, infoFile = None,
 
 if (__name__ == "__main__"):
 
-    trainDictionary("bassoon", normalization = maxNormalize)
+    parser = argparse.ArgumentParser("Compute an NMF dictionary.")
+    parser.add_argument("instrument", help = "The instrument to train a "
+                        + "dictionary for.", type = str)
+    parser.add_argument("--info",
+                        help = "A textfile containing paths to note samples. "
+                        + "(default = None)", type = str, default = None,
+                        dest = "info")
+    parser.add_argument("--norm",
+                        help = "The spectrogram normalization. " +
+                        "(default = 'max')", type = str, default = "max",
+                        dest = "norm")
+    parser.add_argument("-d",
+                        help = "The destination file. (default = None)",
+                        type = str, default = None, dest = "saveAs")
+    args = parser.parse_args()
+
+
+    if (args.norm.lower() == "max"):
+        norm = maxNormalize
+    elif (args.norm.lower() == "rms"):
+        norm = RMSnormalize
+    elif (args.norm.lower() == "sum"):
+        norm = sumNormalize
+    else:
+        norm = None
+
+    trainDictionary(args.insrument, normalization = norm,
+                    dictionaryPath = args.dest)
