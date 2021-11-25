@@ -14,8 +14,8 @@ if (__name__ == "__main__"):
                                      + "transcriptions.")
     parser.add_argument("--interval",
                         help = "The display time for each frame in ms. "
-                        + "(default = 10)",
-                        type = int, default = 10, dest = "interval")
+                        + "(default = 100)",
+                        type = int, default = 100, dest = "interval")
     args = parser.parse_args()
 
     NMFs = ["bassoon-solo_truth", "bassoon-solo_NMF",
@@ -46,6 +46,20 @@ if (__name__ == "__main__"):
     ax.set_ylim(-1, numComp + 1)
     ax.set_yticklabels([])
     ax.set_xlabel("Note (MIDI)")
+
+    # Enable pause
+    running = True
+
+    def onClick(event):
+        global running
+        if running:
+            ani.event_source.stop()
+            running = False
+        else:
+            ani.event_source.start()
+            running = True
+
+    fig.canvas.mpl_connect('button_press_event', onClick)
 
     def animate(i):
         for j in range(numComp):
