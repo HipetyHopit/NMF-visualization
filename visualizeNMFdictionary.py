@@ -59,7 +59,10 @@ if (__name__ == "__main__"):
     parser.add_argument("-m", "--mix", help = "Display a mixed isntrument "
                         + "transcription", default = False, dest = "mix",
                         action = "store_true")
-    parser.add_argument("-b", "--beta", help = "BEta for the beta divergence "
+    parser.add_argument("-s", "--step", help = "Step through transcription",
+                        default = False, dest = "step",
+                        action = "store_true")
+    parser.add_argument("-b", "--beta", help = "Beta for the beta divergence "
                         + "measure.", type = float, default = 0.5,
                         dest = "beta",)
     parser.add_argument("--instrument",
@@ -150,6 +153,10 @@ if (__name__ == "__main__"):
     # Enable pause
     running = True
 
+    # Enable step
+    step = args.step
+    frameIndx = 0
+
     def onClick(event):
         global running
         if running:
@@ -159,17 +166,40 @@ if (__name__ == "__main__"):
             ani.event_source.start()
             running = True
 
-    fig.canvas.mpl_connect('button_press_event', onClick)
+    def onKeyPress(event):
+        global frameIndx
+
+        if (event.key == "enter"):
+            frameIndx += 1
+
+    if (step):
+        fig.canvas.mpl_connect('key_press_event', onKeyPress)
+    else:
+        fig.canvas.mpl_connect('button_press_event', onClick)
 
     def animate(i):
-        for j in range(numComp):
-            toAnimate[j].set_ydata(plots[i][j] + j)
-        time.set_text("t = %.3g s" % (i*hopLen/1000))
-        midiNotes.set_text("Transcription note: %d   True note: %d" % notes[i])
-        for j in range(len(divergenceFunctions)):
-            divergenceText[j].set_text("Transcription %s: %f   True %s: %f"
-                % (divergenceLabels[j], divergences[i][j][0],
-                   divergenceLabels[j], divergences[i][j][1]))
+        global step, frameIndx
+
+        if (step):
+            for j in range(numComp):
+                toAnimate[j].set_ydata(plots[frameIndx][j] + j)
+            time.set_text("t = %.3g s" % (frameIndx*hopLen/1000))
+            midiNotes.set_text("Transcription note: %d   True note: %d"
+                               % notes[frameIndx])
+            for j in range(len(divergenceFunctions)):
+                divergenceText[j].set_text("Transcription %s: %f   True %s: %f"
+                    % (divergenceLabels[j], divergences[frameIndx][j][0],
+                    divergenceLabels[j], divergences[frameIndx][j][1]))
+        else:
+            for j in range(numComp):
+                toAnimate[j].set_ydata(plots[i][j] + j)
+            time.set_text("t = %.3g s" % (i*hopLen/1000))
+            midiNotes.set_text("Transcription note: %d   True note: %d"
+                               % notes[i])
+            for j in range(len(divergenceFunctions)):
+                divergenceText[j].set_text("Transcription %s: %f   True %s: %f"
+                    % (divergenceLabels[j], divergences[i][j][0],
+                    divergenceLabels[j], divergences[i][j][1]))
         return toAnimate
 
     def init():
