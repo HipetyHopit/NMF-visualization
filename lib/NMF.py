@@ -9,21 +9,34 @@ import numpy as np
 def betaDivergence(X, Y, beta = 0.5):
     """
     Return the beta-divergence for X and its
-    approximation..
+    approximation Y.
 
     Keyword arguments:
     X - a matrix.
     Y - X's approximation
     beta -- (default 0.5)
-    
+
     Returns:
     c -- the beta divergence.
     """
-    
-    c = (np.power(X, beta) + (beta-1)*np.power(Y, beta) 
-            - beta*np.multiply(X, np.power(Y, beta - 1)))
+
+    if (abs(Y).min() == 0):
+        Y += np.full(Y.shape, 1e-32)
+
+    if (beta == 0):
+        frac = np.divide(X, Y)
+        return np.sum(frac - np.log10(frac) - 1)
+
+    if (beta == 1):
+        return np.sum(np.multiply(X, np.log10(np.divide(X, Y))) + Y - X)
+
+    if (beta == 2):
+        return 0.5*np.sum(np.square(X - Y))
+
+    c = (np.power(X, beta) + (beta-1)*np.power(Y, beta)
+         - beta*np.multiply(X, np.power(Y, beta - 1)))
     c = np.sum(c)/(beta*(beta - 1))
-    
+
     return c
 
 def frobenius(X, Y):

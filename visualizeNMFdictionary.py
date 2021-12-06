@@ -8,6 +8,8 @@ import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
 
+from lib.NMF import betaDivergence
+
 def correlation(x1, x2):
     """
     Return the corelation coefficient of two signals.
@@ -28,6 +30,24 @@ def correlation(x1, x2):
 
     return r
 
+def rmse(x1, x2):
+    """
+    Return the RMSE of two signals.
+
+    Keyword arguments:
+    x1 -- the first signal.
+    x2 -- the second signal.
+
+    Returns:
+    r -- the RMSE.
+    """
+
+    assert (len(x1) == len(x2))
+
+    r = np.sum(np.square(abs(x1 - x2)))
+
+    return r
+
 if (__name__ == "__main__"):
 
     parser = argparse.ArgumentParser("Visualize and compare the dictionary "
@@ -39,11 +59,19 @@ if (__name__ == "__main__"):
     parser.add_argument("-m", "--mix", help = "Display a mixed isntrument "
                         + "transcription", default = False, dest = "mix",
                         action = "store_true")
+    parser.add_argument("-b", "--beta", help = "BEta for the beta divergence "
+                        + "measure.", type = float, default = 0.5,
+                        dest = "beta",)
     parser.add_argument("--instrument",
                         help = "The instrument part to display. "
                         + "(default = 'bassoon')", type = str,
                         default = "bassoon", dest = "instrument")
     args = parser.parse_args()
+
+    def beta(x1, x2):
+        """ Beta divergence wrapper function. """
+
+        return betaDivergence(x1, x2, beta = args.beta)
 
     if (args.mix):
         spectrogram = np.load("data/mix_spectrogram.npy").T
@@ -68,9 +96,12 @@ if (__name__ == "__main__"):
     numComp = 3
     plotBins = 256
 
+    divergenceFunctions = [correlation, rmse, beta]
+    divergenceLabels = ["correlation", "RMSE", "beta-divergence"]
+
     plots = []
     notes = []
-    correlations = []
+    divergences = []
     numFrames, numBins = spectrogram.shape
     for i in range(numFrames):
         transcriptionDict = dictionary[transcriptionDictIndx[i]]
@@ -78,8 +109,11 @@ if (__name__ == "__main__"):
         spect = spectrogram[i]
         notes += [(transcriptionDictIndx[i], truthDictIndx[i])]
 
-        correlations += [(correlation(transcriptionDict, spect),
-                          correlation(truthDict, spect))]
+        frameDivergences = []
+        for f in divergenceFunctions:
+            frameDivergences += [(f(transcriptionDict, spect),
+                                  f(truthDict, spect))]
+        divergences += [frameDivergences]
 
         transcriptionDict = 0.9*transcriptionDict/np.max(abs(transcriptionDict))
         truthDict = 0.9*truthDict/np.max(abs(truthDict))
@@ -96,14 +130,20 @@ if (__name__ == "__main__"):
     for i in range(numComp):
         line, = ax.plot(k, plots[0][1] + i, label = labels[i])
         toAnimate += [line]
-    time = ax.text(0, numComp*2 - 1, "t = %.3g s" % 0.0)
-    midiNotes = ax.text(0, numComp*2 - 2,
+    time = ax.text(0, numComp + len(divergenceFunctions) + 1,
+                   "t = %.3g s" % 0.0)
+    midiNotes = ax.text(0, numComp + len(divergenceFunctions),
                         "Transcription note: %d   True note: %d" % notes[0])
-    r = ax.text(0, numComp*2 - 3, ("Transcription correlation: %f   "
-                + "True correlation: %f") % correlations[0])
+    divergenceText = []
+    for i in range(len(divergenceFunctions)):
+        divergenceText += [ax.text(0, numComp + i,
+                                   "Transcription %s: %f   True %s: %f"
+                                   % (divergenceLabels[i], divergences[0][i][0],
+                                   divergenceLabels[i], divergences[0][i][1]))]
     legend = ax.legend(loc = 1)
-    toAnimate += [time, midiNotes, r, legend]
-    ax.set_ylim(-1, numComp*2)
+    toAnimate += [time, midiNotes, legend]
+    toAnimate += divergenceText
+    ax.set_ylim(-1, numComp + len(divergenceFunctions) + 2)
     ax.set_yticklabels([])
     ax.set_xlabel("Frequency (Hz)")
 
@@ -126,8 +166,10 @@ if (__name__ == "__main__"):
             toAnimate[j].set_ydata(plots[i][j] + j)
         time.set_text("t = %.3g s" % (i*hopLen/1000))
         midiNotes.set_text("Transcription note: %d   True note: %d" % notes[i])
-        r.set_text(("Transcription correlation: %f   "
-                    + "True correlation: %f") % correlations[i])
+        for j in range(len(divergenceFunctions)):
+            divergenceText[j].set_text("Transcription %s: %f   True %s: %f"
+                % (divergenceLabels[j], divergences[i][j][0],
+                   divergenceLabels[j], divergences[i][j][1]))
         return toAnimate
 
     def init():
@@ -135,7 +177,8 @@ if (__name__ == "__main__"):
             toAnimate[j].set_ydata(np.ma.array(k, mask=True))
         time.set_text("")
         midiNotes.set_text("")
-        r.set_text("")
+        for i in range(len(divergenceFunctions)):
+            divergenceText[i].set_text("")
         return (line, time)
 
     ani = animation.FuncAnimation(fig, animate, np.arange(0, numFrames),
