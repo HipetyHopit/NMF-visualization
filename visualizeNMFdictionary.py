@@ -59,8 +59,8 @@ if (__name__ == "__main__"):
     parser.add_argument("-m", "--mix", help = "Display a mixed isntrument "
                         + "transcription", default = False, dest = "mix",
                         action = "store_true")
-    parser.add_argument("-s", "--step", help = "Step through transcription",
-                        default = False, dest = "step",
+    parser.add_argument("-r", "--run", help = "Run through transcription",
+                        default = False, dest = "run",
                         action = "store_true")
     parser.add_argument("-b", "--beta", help = "Beta for the beta divergence "
                         + "measure.", type = float, default = 0.5,
@@ -69,7 +69,14 @@ if (__name__ == "__main__"):
                         help = "The instrument part to display. "
                         + "(default = 'bassoon')", type = str,
                         default = "bassoon", dest = "instrument")
+    parser.add_argument("--TRIOS", help = "Use TRIOS excerpts",
+                        default = False, dest = "trios",
+                        action = "store_true")
     args = parser.parse_args()
+
+    datasetPrefix = "TRIOS_" if args.trios else ""
+    mixPrefix = "mix" if args.mix else "solo"
+
 
     def beta(x1, x2):
         """ Beta divergence wrapper function. """
@@ -77,15 +84,27 @@ if (__name__ == "__main__"):
         return betaDivergence(x1, x2, beta = args.beta)
 
     if (args.mix):
-        spectrogram = np.load("data/mix_spectrogram.npy").T
-        dictionary = np.load("data/%s_dictionary.npy" % args.instrument).T
-        nmf = np.load("data/mix-%s_NMF.npy" % args.instrument)
-        truth = np.load("data/mix-%s_truth.npy" % args.instrument)
+        spectrogram = np.load("data/%smix_spectrogram.npy" % datasetPrefix).T
     else:
-        spectrogram = np.load("data/bassoon-solo_spectrogram.npy").T
-        dictionary = np.load("data/bassoon_dictionary.npy").T
-        nmf = np.load("data/bassoon-solo_NMF.npy")
-        truth = np.load("data/bassoon-solo_truth.npy")
+        spectrogram = np.load("data/%ssolo-%s_spectrogram.npy" %
+                              (datasetPrefix, args.instrument)).T
+    dictionary = np.load("data/%s_dictionary.npy" % args.instrument).T
+    nmf = np.load("data/%s%s-%s_NMF.npy" % (datasetPrefix, mixPrefix,
+                                            args.instrument))
+    truth = np.load("data/%s%s-%s_truth.npy" % (datasetPrefix, mixPrefix,
+                                                args.instrument))
+
+    #if (args.mix):
+        #spectrogram = np.load("data/%smix_spectrogram.npy" % prefix).T
+        #dictionary = np.load("data/%s_dictionary.npy" % (prefix,
+                                                         #args.instrument)).T
+        #nmf = np.load("data/%smix-%s_NMF.npy" % (prefix, args.instrument))
+        #truth = np.load("data/%smix-%s_truth.npy" % (prefix, args.instrument))
+    #else:
+        #spectrogram = np.load("data/bassoon-solo_spectrogram.npy").T
+        #dictionary = np.load("data/bassoon_dictionary.npy").T
+        #nmf = np.load("data/bassoon-solo_NMF.npy")
+        #truth = np.load("data/bassoon-solo_truth.npy")
 
     labels = ["True W entry", "Estimated W entry", "Spectrogram"]
 
@@ -105,6 +124,9 @@ if (__name__ == "__main__"):
     plots = []
     notes = []
     divergences = []
+    stats = []
+    for i in range(len(divergenceFunctions)):
+        stats += [[0, 0, 0]]
     numFrames, numBins = spectrogram.shape
     for i in range(numFrames):
         transcriptionDict = dictionary[transcriptionDictIndx[i]]
@@ -113,9 +135,18 @@ if (__name__ == "__main__"):
         notes += [(transcriptionDictIndx[i], truthDictIndx[i])]
 
         frameDivergences = []
-        for f in divergenceFunctions:
-            frameDivergences += [(f(transcriptionDict, spect),
-                                  f(truthDict, spect))]
+        for j in range(len(divergenceFunctions)):
+            f = divergenceFunctions[j]
+            d1 = f(transcriptionDict, spect)
+            d2 = f(truthDict, spect)
+            frameDivergences += [(d1, d2)]
+
+            if (truthDictIndx[i] != 0):
+                stats[j][0] += 1
+                if (d1 < d2):
+                    stats[j][1] += 1
+                if (d2 < d1):
+                    stats[j][2] += 1
         divergences += [frameDivergences]
 
         transcriptionDict = 0.9*transcriptionDict/np.max(abs(transcriptionDict))
@@ -124,6 +155,21 @@ if (__name__ == "__main__"):
 
         plots += [(truthDict[:plotBins], transcriptionDict[:plotBins],
                    spect[:plotBins])]
+
+    # Stats.
+    print ("Percentage frames where truth metric is greater than transcription "
+           + "metric:")
+    for i in range(len(divergenceFunctions)):
+        greater = 100*(stats[i][1]/stats[i][0])
+        print ("%s: %f %%" % (divergenceLabels[i], greater))
+
+    print ("")
+
+    print ("Percentage frames where truth metric is less than transcription "
+           + "metric:")
+    for i in range(len(divergenceFunctions)):
+        less = 100*(stats[i][2]/stats[i][0])
+        print ("%s: %f %%" % (divergenceLabels[i], less))
 
     # Animate dictionary entries.
     toAnimate = []
@@ -154,7 +200,7 @@ if (__name__ == "__main__"):
     running = True
 
     # Enable step
-    step = args.step
+    step = not args.run
     frameIndx = 0
 
     def onClick(event):
