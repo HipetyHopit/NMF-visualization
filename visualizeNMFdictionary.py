@@ -48,6 +48,25 @@ def rmse(x1, x2):
 
     return r
 
+instrumentMinNote = {"violin": 55,
+                     "clarinet": 50,
+                     "saxophone":49,
+                     "bassoon": 34}
+
+notesNames = ("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B")
+
+def midiToNote(midi):
+    """
+    Return the note name of a midi number.
+    """
+
+    if (midi < 0):
+        return "None"
+
+    note = notesNames[midi%12] + str(midi//12 - 1)
+
+    return note
+
 if (__name__ == "__main__"):
 
     parser = argparse.ArgumentParser("Visualize and compare the dictionary "
@@ -77,6 +96,9 @@ if (__name__ == "__main__"):
     datasetPrefix = "TRIOS_" if args.trios else ""
     mixPrefix = "mix" if args.mix else "solo"
 
+    midiOffset = 0
+    if (args.instrument in instrumentMinNote):
+        midiOffset = instrumentMinNote[args.instrument]
 
     def beta(x1, x2):
         """ Beta divergence wrapper function. """
@@ -94,23 +116,17 @@ if (__name__ == "__main__"):
     truth = np.load("data/%s%s-%s_truth.npy" % (datasetPrefix, mixPrefix,
                                                 args.instrument))
 
-    #if (args.mix):
-        #spectrogram = np.load("data/%smix_spectrogram.npy" % prefix).T
-        #dictionary = np.load("data/%s_dictionary.npy" % (prefix,
-                                                         #args.instrument)).T
-        #nmf = np.load("data/%smix-%s_NMF.npy" % (prefix, args.instrument))
-        #truth = np.load("data/%smix-%s_truth.npy" % (prefix, args.instrument))
-    #else:
-        #spectrogram = np.load("data/bassoon-solo_spectrogram.npy").T
-        #dictionary = np.load("data/bassoon_dictionary.npy").T
-        #nmf = np.load("data/bassoon-solo_NMF.npy")
-        #truth = np.load("data/bassoon-solo_truth.npy")
-
     labels = ["True W entry", "Estimated W entry", "Spectrogram"]
 
     transcriptionDictIndx = np.argmax(nmf, axis = 0)
     truthDictIndx = np.argmax(truth, axis = 0)
-    spectrogram = spectrogram/np.max(abs(spectrogram))
+    norm = np.max(abs(spectrogram), axis = 1)
+    spectrogram = spectrogram/np.repeat(norm[:, np.newaxis],
+                                        spectrogram.shape[1], axis = 1)
+
+    numFrames, numBins = spectrogram.shape
+    silentFrames = 1 - np.max(truth, axis = 0)
+    silentDict = np.zeros(numBins)
 
     hopLen = 10
     Fs = 44100
@@ -127,12 +143,24 @@ if (__name__ == "__main__"):
     stats = []
     for i in range(len(divergenceFunctions)):
         stats += [[0, 0, 0]]
-    numFrames, numBins = spectrogram.shape
     for i in range(numFrames):
         transcriptionDict = dictionary[transcriptionDictIndx[i]]
-        truthDict = dictionary[truthDictIndx[i]]
+        if (silentFrames[i]):
+            truthDict = silentDict
+        else:
+            truthDict = dictionary[truthDictIndx[i]]
         spect = spectrogram[i]
-        notes += [(transcriptionDictIndx[i], truthDictIndx[i])]
+
+        transcriptionNote = transcriptionDictIndx[i] + midiOffset
+        transcriptionNote = midiToNote(transcriptionNote)
+
+        if (silentFrames[i]):
+            truthNote = -1
+        else:
+            truthNote = truthDictIndx[i] + midiOffset
+        truthNote = midiToNote(truthNote)
+
+        notes += [(transcriptionNote, truthNote)]
 
         frameDivergences = []
         for j in range(len(divergenceFunctions)):
@@ -150,7 +178,8 @@ if (__name__ == "__main__"):
         divergences += [frameDivergences]
 
         transcriptionDict = 0.9*transcriptionDict/np.max(abs(transcriptionDict))
-        truthDict = 0.9*truthDict/np.max(abs(truthDict))
+        if (not silentFrames[i]):
+            truthDict = 0.9*truthDict/np.max(abs(truthDict))
         spect = 0.9*spect
 
         plots += [(truthDict[:plotBins], transcriptionDict[:plotBins],
@@ -182,7 +211,7 @@ if (__name__ == "__main__"):
     time = ax.text(0, numComp + len(divergenceFunctions) + 1,
                    "t = %.3g s" % 0.0)
     midiNotes = ax.text(0, numComp + len(divergenceFunctions),
-                        "Transcription note: %d   True note: %d" % notes[0])
+                        "Transcription note: %s   True note: %s" % notes[0])
     divergenceText = []
     for i in range(len(divergenceFunctions)):
         divergenceText += [ax.text(0, numComp + i,
@@ -215,8 +244,12 @@ if (__name__ == "__main__"):
     def onKeyPress(event):
         global frameIndx
 
-        if (event.key == "enter"):
+        if (event.key == "enter" or event.key == "right"):
             frameIndx += 1
+        if (event.key == "left"):
+            frameIndx -= 1
+
+        frameIndx %= numFrames
 
     if (step):
         fig.canvas.mpl_connect('key_press_event', onKeyPress)
@@ -230,7 +263,7 @@ if (__name__ == "__main__"):
             for j in range(numComp):
                 toAnimate[j].set_ydata(plots[frameIndx][j] + j)
             time.set_text("t = %.3g s" % (frameIndx*hopLen/1000))
-            midiNotes.set_text("Transcription note: %d   True note: %d"
+            midiNotes.set_text("Transcription note: %s   True note: %s"
                                % notes[frameIndx])
             for j in range(len(divergenceFunctions)):
                 divergenceText[j].set_text("Transcription %s: %f   True %s: %f"
