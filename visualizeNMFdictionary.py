@@ -116,7 +116,7 @@ if (__name__ == "__main__"):
     truth = np.load("data/%s%s-%s_truth.npy" % (datasetPrefix, mixPrefix,
                                                 args.instrument))
 
-    labels = ["True W entry", "Estimated W entry", "Spectrogram"]
+    labels = ["True W entry", "Predicted W entry", "Spectrogram"]
 
     transcriptionDictIndx = np.argmax(nmf, axis = 0)
     truthDictIndx = np.argmax(truth, axis = 0)
@@ -186,7 +186,7 @@ if (__name__ == "__main__"):
                    spect[:plotBins])]
 
     # Stats.
-    print ("Percentage frames where truth metric is greater than transcription "
+    print ("Percentage frames where truth metric is greater than prediction "
            + "metric:")
     for i in range(len(divergenceFunctions)):
         greater = 100*(stats[i][1]/stats[i][0])
@@ -194,7 +194,7 @@ if (__name__ == "__main__"):
 
     print ("")
 
-    print ("Percentage frames where truth metric is less than transcription "
+    print ("Percentage frames where truth metric is less than prediction "
            + "metric:")
     for i in range(len(divergenceFunctions)):
         less = 100*(stats[i][2]/stats[i][0])
@@ -263,7 +263,7 @@ if (__name__ == "__main__"):
             for j in range(numComp):
                 toAnimate[j].set_ydata(plots[frameIndx][j] + j)
             time.set_text("t = %.3g s" % (frameIndx*hopLen/1000))
-            midiNotes.set_text("Transcription note: %s   True note: %s"
+            midiNotes.set_text("Predicted note: %s   True note: %s"
                                % notes[frameIndx])
             for j in range(len(divergenceFunctions)):
                 divergenceText[j].set_text("Transcription %s: %f   True %s: %f"
@@ -273,10 +273,10 @@ if (__name__ == "__main__"):
             for j in range(numComp):
                 toAnimate[j].set_ydata(plots[i][j] + j)
             time.set_text("t = %.3g s" % (i*hopLen/1000))
-            midiNotes.set_text("Transcription note: %d   True note: %d"
+            midiNotes.set_text("Predicted note: %d   True note: %d"
                                % notes[i])
             for j in range(len(divergenceFunctions)):
-                divergenceText[j].set_text("Transcription %s: %f   True %s: %f"
+                divergenceText[j].set_text("Predicted %s: %f   True %s: %f"
                     % (divergenceLabels[j], divergences[i][j][0],
                     divergenceLabels[j], divergences[i][j][1]))
         return toAnimate
