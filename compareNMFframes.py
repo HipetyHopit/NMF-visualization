@@ -229,6 +229,20 @@ if (__name__ == "__main__"):
                         "divergenceFuncs": divergenceFunctions[1:],
                         "divergenceLabels": divergenceLabels[1:],
                         }]
+    transcriptions += [{"label": "NMF-extended",
+                        "dictionary": np.load("data/dictionaries/%s-extended.npy" % instrument),
+                        "transcription": np.load("data/NMFs/%s-%s.npy" % (instrument, excerpt)),
+                        "spectrumFunc": getDictionarySpectrums,
+                        "divergenceFuncs": divergenceFunctions,
+                        "divergenceLabels": divergenceLabels,
+                        }]
+    transcriptions += [{"label": "NMF-extended Spectrogram Estimate",
+                        "dictionary": np.load("data/dictionaries/%s-extended.npy" % instrument),
+                        "transcription": np.load("data/NMFs/%s-%s.npy" % (instrument, excerpt)),
+                        "spectrumFunc": getNMFSpectrums,
+                        "divergenceFuncs": divergenceFunctions[1:],
+                        "divergenceLabels": divergenceLabels[1:],
+                        }]
 
     if (mix):
         spectrogram = np.load("data/%s_spectrogram.npy" % excerpt).T

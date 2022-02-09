@@ -117,7 +117,7 @@ def NMF(V, H = None, W = None, k = 1, threshold = 0.0001, iterations = 200,
 
     return H, W      
 
-def frameNMF(v, W, beta = 0.5, h = None, threshold = 0.0001, cost = frobenius,
+def frameNMF(v, W, beta = 0.5, h = None, threshold = 0.0001,
              iterations = 200, **kwargs):
     """
     Return h, the approximation for the unkown factor of v.
@@ -132,7 +132,6 @@ def frameNMF(v, W, beta = 0.5, h = None, threshold = 0.0001, cost = frobenius,
     beta -- the beta divergence parameter. (default 2)
     h -- an initialization for h. (default = None)
     threshold -- the cost threshold. (default = 0.0001)
-    cost -- the cost function. (default = frobenius)
     iterations -- the maximum number of iterations. (default = 200)
     """
 
@@ -151,7 +150,7 @@ def frameNMF(v, W, beta = 0.5, h = None, threshold = 0.0001, cost = frobenius,
         h = np.multiply(h, f*a/(W.T*b))
         
         # Calculate cost
-        c = cost(v, W*h)
+        c = betaDivergence(v, W*h, beta = beta)
          
         if (c <= threshold):
             break
@@ -160,7 +159,7 @@ def frameNMF(v, W, beta = 0.5, h = None, threshold = 0.0001, cost = frobenius,
     
     return h, c
 
-def transcribeInstrument(V, W, cost = "frobenius", **kwargs):
+def transcribeInstrument(V, W, **kwargs):
     """
     Return H, the approximation for the unkown factor of V.
     
@@ -170,7 +169,6 @@ def transcribeInstrument(V, W, cost = "frobenius", **kwargs):
     Keyword arguments:
     V -- the matrix to factorize.
     W -- the known factor.
-    cost -- the cost function. (default = "frobenius")
     """
     
     numBins, numFrames = V.shape
@@ -178,20 +176,8 @@ def transcribeInstrument(V, W, cost = "frobenius", **kwargs):
     
     H = np.empty((numFrames, numNotes))
     
-    cost = cost.lower()
-    if (cost == "kld"):
-        c = KLD
-    elif (cost == "beta"):
-        if ("beta" in kwargs):
-            def c(X, Y):
-                return betaDivergence(X, Y, kwargs["beta"])
-        else :
-            c = betaDivergence
-    else:
-        c = frobenius
-    
     for i in range(numFrames):
         v = V[:, i].reshape((numBins, 1))
-        H[i], _ = frameNMF(v, W, cost = c, **kwargs)
+        H[i], _ = frameNMF(v, W, **kwargs)
     
     return H.T

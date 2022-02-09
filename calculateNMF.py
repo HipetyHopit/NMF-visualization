@@ -9,6 +9,7 @@ import numpy as np
 import os.path
 
 from lib.NMF import NMF
+from lib.NMF import transcribeInstrument
 from lib.normalize import maxNormalize
 from lib.normalize import RMSnormalize
 from lib.normalize import sumNormalize
@@ -34,6 +35,11 @@ if (__name__ == "__main__"):
                         help = "The destination file. (default = None)",
                         type = str, default = None, dest = "saveAs")
     parser.add_argument("--updateW", default = False, action = "store_true")
+    parser.add_argument("-b",
+                        help = "Beta. (default = 0.5)",
+                        type = float, default = 0.5, dest = "beta")
+    parser.add_argument("--noFrame", help = "Don't use frame NMF.",
+                        default = False, action = "store_true")
     args = parser.parse_args()
 
     # Load spectrogram.
@@ -46,7 +52,7 @@ if (__name__ == "__main__"):
             pass
 
         try:
-            S = np.np.load(path + ".npy")
+            S = np.load(path + ".npy")
             break
         except:
             pass
@@ -76,7 +82,7 @@ if (__name__ == "__main__"):
             pass
 
         try:
-            W = np.np.load(path + ".npy")
+            W = np.load(path + ".npy")
             break
         except:
             pass
@@ -107,8 +113,11 @@ if (__name__ == "__main__"):
 
     numBins, numNotes = W.shape
 
-    H, W = NMF(V, H = None, W = W, k = numNotes, threshold = 0.001,
-               iterations = 20, updateW = args.updateW, verbose = False)
+    if (args.noFrame):
+        H, _ = NMF(V, H = None, W = W, k = numNotes, threshold = 0.001,
+                iterations = 200, updateW = args.updateW, verbose = False)
+    else:
+        H = transcribeInstrument(V, W, beta = args.beta)
 
     path = args.excerpt
     if (args.saveAs is None):
